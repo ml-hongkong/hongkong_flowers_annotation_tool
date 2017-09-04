@@ -110,7 +110,7 @@ export default class HomePage extends Component {
       [] :
       Object.keys(flowers)
         .map(key => Object.assign({}, flowers[key], { name: key }));
-    const selectedItem = flowers.hasOwnProperty(this.state.selected) ? flowers[this.state.selected] : {};
+    const selectedItem = (flowers && flowers.hasOwnProperty(this.state.selected)) ? flowers[this.state.selected] : {};
     const selectImages = flowerGroup.hasOwnProperty(this.state.selected) ? flowerGroup[this.state.selected].files : [];
 
     return (

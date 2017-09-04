@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Layout, Card, Checkbox, Modal, Spin } from 'antd';
+import { Layout, Card, Checkbox, Modal } from 'antd';
 import ReactCrop from 'react-image-crop';
 
 require('react-image-crop/dist/ReactCrop.css');
