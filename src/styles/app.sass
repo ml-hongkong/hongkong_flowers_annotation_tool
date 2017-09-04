@@ -1,0 +1,142 @@
+@import "variables"
+
+html, body
+  font-family: 'Rubik', 'Helvetica Neue', Helvetica, Arial, sans-serif
+  font-size: 16px
+  height: 100%
+
+hr
+  border: none
+  appearance: none
+  border-top: 1px solid #ccc
+  margin-bottom: 1.25em
+
+#app
+  position: relative
+  height: 100%
+
+.App
+  position: relative
+  height: 100%
+
+  .App-header
+    $header-line-height: 64px
+
+    .App-header-meun
+      line-height: $header-line-height
+
+    .App-header-logo
+      font-size: 1.25em
+      color: white
+      margin-right: 28px
+      float: left
+      height: $header-line-height - 1
+      line-height: $header-line-height - 1
+      vertical-align: middle
+
+    .App-header-aux
+      text-align: right
+
+      .App-header-avatar
+        vertical-align: middle
+        margin-right: .5em
+
+  .App-content
+    min-height: 280px
+    background: '#fff'
+    padding: 24
+    margin: 0
+
+  .App-footer
+    padding-top: 0
+
+    .App-footter-copyright
+      font-size: 0.85em
+      text-align: center
+
+.Loading
+  padding: 40vh 1vw 1vw
+  text-align: center
+
+.Login
+  padding: 32vh 1vw 1vw
+  text-align: center
+
+  .Login-title
+    color: $blue-color
+
+  .Login-button
+    margin-bottom: 2em
+
+  .Login-subtitle
+    color: #666
+    margin-bottom: 2em
+
+  .Login-footer
+    color: #999
+    position: absolute
+    font-size: 0.75em
+    text-align: center
+    bottom: 0
+    left: 0
+    width: 100%
+    padding: 1em
+
+.HomePage
+  background: #fff
+  padding: 24px 0
+
+.FlowerList-sider
+  background: #fff
+
+  .FlowerList-sider-icon
+    font-size: 16px
+    vertical-align: middle
+
+  .FlowerList-sider-badge
+    top: -1px
+    margin-right: 6px
+
+.FlowerForm-image-modal-selected
+  margin-bottom: 1em
+
+.FlowerForm
+  background: #fff
+
+  .FlowerForm-selected
+    margin-bottom: 1em
+
+  .FlowerForm-images
+
+    .FlowerForm-images-card
+      padding: 12px
+      padding-bottom: 0
+      cursor: pointer
+      margin-bottom: 1em
+
+      .FlowerForm-images-card-link
+        display: block
+
+      .FlowerForm-images-card-image
+        background-position: center
+        background-repeat: no-repeat
+        background-size: cover
+        position: relative
+        width: 100%
+        padding-top: 100%
+        border-radius: 100%
+        margin-bottom: 1em
+
+      .FlowerForm-images-card-body
+        border-top: 1px solid #eee
+        padding-top: 1em
+        padding-bottom: 1em
+        margin-left: -11px
+        margin-right: -12px
+
+        h3
+          font-size: 0.95em
+
+.App-notfound
+  text-align: center
+  padding-top: 35vh

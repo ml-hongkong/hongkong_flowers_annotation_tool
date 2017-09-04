@@ -1,0 +1,7 @@
+node_modules
+.log
+build
+
+# Mac OS X custom attribute files
+.DS_Store
+.env
