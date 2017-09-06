@@ -8,7 +8,7 @@ const { Content } = Layout;
 const AppLayout = ({ children, profile }) => (
   <Layout>
     <AppHeader profile={profile}/>
-    <Layout style={{ padding: '24px' }}>
+    <Layout className="App-layout">
       <Content className="App-content">
         { children }
       </Content>

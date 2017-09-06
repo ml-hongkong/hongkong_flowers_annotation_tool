@@ -114,8 +114,9 @@ class FlowerForm extends Component {
             this.setState({ imageSelected });
           }}
         >
-          <b>Selext this image</b>
+          <b>Select this image</b>
         </Checkbox>
+        <br/>
         <ReactCrop
           crop={selectImageCrop}
           key={selectImage.id}
@@ -144,7 +145,10 @@ class FlowerForm extends Component {
             <Card.Grid className="FlowerForm-images-card" key={key} style={gridStyle}>
               <a className="FlowerForm-images-card-link" onClick={this.openImageModel(image).bind(this)}>
                 {
-                  <div className="FlowerForm-images-card-image" style={{ backgroundImage: `url(${image.url})` }}/>
+                  <div
+                    className="FlowerForm-images-card-image"
+                    style={{ backgroundImage: `url(${encodeURI(image.url)})` }}
+                  />
                 }
                 <div
                   className="FlowerForm-images-card-body"

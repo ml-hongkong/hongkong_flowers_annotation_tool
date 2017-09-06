@@ -19,8 +19,19 @@ hr
   position: relative
   height: 100%
 
+  .App-layout
+    height: 100%
+    position: absolute
+    padding: 88px 24px 48px
+    width: 100%
+    left: 0
+    top: 0
+    z-index: 2
+
   .App-header
     $header-line-height: 64px
+    position: relative
+    z-index: 3
 
     .App-header-meun
       line-height: $header-line-height
@@ -42,13 +53,18 @@ hr
         margin-right: .5em
 
   .App-content
-    min-height: 280px
+    height: 100%
     background: '#fff'
     padding: 24
     margin: 0
 
   .App-footer
     padding-top: 0
+    position: fixed
+    z-index: 3
+    bottom: 0
+    left: 0
+    width: 100%
 
     .App-footter-copyright
       font-size: 0.85em
@@ -85,9 +101,16 @@ hr
 .HomePage
   background: #fff
   padding: 24px 0
+  height: 100%
+
+  .HomePage-content
+    padding: 0 24px
+    min-height: 280
 
 .FlowerList-sider
   background: #fff
+  height: 100%
+  overflow-y: auto
 
   .FlowerList-sider-icon
     font-size: 16px

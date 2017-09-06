@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import { Layout } from 'antd';
+import Loading from '../components/Loading';
 import FlowerList from '../components/FlowerList';
 import FlowerForm from '../components/FlowerForm';
 import AppLayout from '../components/layouts/AppLayout';
@@ -73,8 +74,11 @@ export default class HomePage extends Component {
     this.timer = 0;
     this.state = {
       selected: '',
+      loading: true,
     };
-    this.props.s3Actions.getFileList();
+    this.props.s3Actions.getFileList().then(() =>
+      this.setState({ loading: false })
+    );
   }
 
   componentWillReceiveProps ({ flowerGroup }) {
@@ -105,6 +109,10 @@ export default class HomePage extends Component {
   }
 
   render () {
+    if (this.state.loading) {
+      return (<Loading/>);
+    }
+
     const { profile, flowerGroup, flowers } = this.props;
     const flowerList = isEmpty(flowers) ?
       [] :
@@ -122,7 +130,7 @@ export default class HomePage extends Component {
             isLoaded={isLoaded(flowers)}
             onSelect={this.handleSelect.bind(this)}
           />
-          <Content style={{ padding: '0 24px', minHeight: 280 }}>
+          <Content className="HomePage-content">
             <h1>{ this.state.selected }</h1>
             <hr/>
             <FlowerForm
