@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Menu, Layout, Badge, Icon } from 'antd';
+import { Menu, Layout, Badge } from 'antd';
 
 const { Sider } = Layout;
 
@@ -8,10 +8,6 @@ const FlowerList = ({ group, flowers, onSelect }) => {
   if (!Object.keys(group).length) { // prevent empty list
     return null;
   }
-  const selectedFlower = flowers.reduce((o, f) => {
-    o[f.name] = (f.selected === true);
-    return o;
-  }, {});
 
   return (
     <Sider className="FlowerList-sider" width={200}>
@@ -23,19 +19,17 @@ const FlowerList = ({ group, flowers, onSelect }) => {
       >
         { Object.keys(group).map(groupName => {
           const currentFlower = flowers.find(f => f.name === groupName);
-          const imageCount = (currentFlower && currentFlower.images) ? Object.keys(currentFlower.images).length : 0;
+          const imageCount = (currentFlower && currentFlower.images) ?
+            Object.keys(currentFlower.images)
+              .filter(key => currentFlower.images[key].selected).length :
+            0;
 
           return (
             <Menu.Item key={groupName}>
-              <Icon
-                className="FlowerList-sider-icon"
-                style={{ color: selectedFlower[groupName] ? '#87d068' : '#f04134' }}
-                type={ selectedFlower[groupName] ? 'check-square-o' : 'close-square-o' }
-              />
               <Badge
                 className="FlowerList-sider-badge"
                 count={`${imageCount}/${group[groupName].files.length}`}
-                style={{ backgroundColor: selectedFlower[groupName] ? '#87d068' : '#f04134' }}
+                style={{ backgroundColor: imageCount > 0 ? '#87d068' : '#f04134' }}
               />
               { groupName }
             </Menu.Item>
@@ -55,8 +49,8 @@ FlowerList.propTypes = {
   }),
   flowers: PropTypes.arrayOf(
     PropTypes.shape({
-      name: PropTypes.string.isRequired,
-      selected: PropTypes.bool.isRequired,
+      name: PropTypes.string,
+      selected: PropTypes.bool,
       images: PropTypes.object,
     })
   ).isRequired,

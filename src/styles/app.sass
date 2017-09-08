@@ -102,6 +102,7 @@ hr
   background: #fff
   padding: 24px 0
   height: 100%
+  position: relative
 
   .HomePage-content
     padding: 0 24px
@@ -152,12 +153,14 @@ hr
 
       .FlowerForm-images-card-body
         border-top: 1px solid #eee
-        padding-top: 1em
-        padding-bottom: 1em
+        padding: 1em 2.5em
         margin-left: -11px
         margin-right: -12px
 
         h3
+          overflow: hidden
+          text-overflow: ellipsis
+          white-space: nowrap
           font-size: 0.95em
 
 .App-notfound

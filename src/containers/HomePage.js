@@ -20,31 +20,39 @@ import {
 const { Content } = Layout;
 
 @firebaseConnect([ '/flowers' ])
-@connect(({ firebase, rootReducer: { s3: { results: fileList, errorMessage } } }) => ({
-  flowers: dataToJS(firebase, 'flowers'),
-  profile: pathToJS(firebase, 'profile'),
-  fileList,
-  flowerGroup: (isLoaded(fileList) && !isEmpty(fileList)) ? fileList
-    .sort((a, b) => {
-      const flowers = dataToJS(firebase, 'flowers');
+@connect(({ firebase, rootReducer: { s3: { results: fileList, errorMessage } } }) => {
+  const flowers = dataToJS(firebase, 'flowers');
+  let flowerGroup = fileList;
+
+  if (isLoaded(flowers) && !isEmpty(flowers)) {
+    flowerGroup = flowerGroup.sort((a, b) => {
       const af = flowers[a.name] || null;
       const bf = flowers[b.name] || null;
       const sa = (af && af.selected) ? 1 : 0;
       const sb = (bf && bf.selected) ? 1 : 0;
       return (sb - sa);
-    })
-    .reduce((g, f) => {
-      if (!g[f.name]) {
-        g[f.name] = {
-          name: f.name,
-          files: []
-        };
-      }
-      g[f.name].files.push(f);
-      return g;
-    }, {}) : {},
-  s3Error: errorMessage,
-}), dispatch => ({
+    });
+  }
+
+  flowerGroup = flowerGroup.reduce((g, f) => {
+    if (!g[f.name]) {
+      g[f.name] = {
+        name: f.name,
+        files: []
+      };
+    }
+    g[f.name].files.push(f);
+    return g;
+  }, {});
+
+  return {
+    flowers,
+    profile: pathToJS(firebase, 'profile'),
+    fileList,
+    flowerGroup,
+    s3Error: errorMessage,
+  };
+}, dispatch => ({
   s3Actions: bindActionCreators(s3Actions, dispatch)
 }))
 @userIsAuthenticated
@@ -93,19 +101,15 @@ export default class HomePage extends Component {
     this.setState({ selected: index });
   }
 
-  handleFlowerSelect (checked) {
-    const flowerName = this.state.selected;
-
-    this.props.firebase.update(`/flowers/${flowerName}`, {
-      name: flowerName,
-      selected: checked
-    });
-  }
-
   handleFlowerImageUpdate (image) {
     const flowerName = this.state.selected;
 
-    this.props.firebase.update(`/flowers/${flowerName}/images/${image.id}`, image);
+    // update the flower name everytime, in case ths flower isn't exists in database
+    this.props.firebase.update(`/flowers/${flowerName}`, {
+      name: flowerName,
+    }).then(() =>
+      this.props.firebase.update(`/flowers/${flowerName}/images/${image.id}`, image)
+    );
   }
 
   render () {
@@ -136,7 +140,6 @@ export default class HomePage extends Component {
             <FlowerForm
               images={selectImages}
               item={selectedItem}
-              onSelected={this.handleFlowerSelect.bind(this)}
               onUpdate={this.handleFlowerImageUpdate.bind(this)}
             />
           </Content>

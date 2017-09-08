@@ -6,7 +6,7 @@ import ReactCrop from 'react-image-crop';
 require('react-image-crop/dist/ReactCrop.css');
 
 const gridStyle = {
-  width: '20%',
+  width: '15%',
   textAlign: 'center',
 };
 
@@ -30,7 +30,6 @@ class FlowerForm extends Component {
       }),
     }),
     onUpdate: PropTypes.func.isRequired,
-    onSelected: PropTypes.func.isRequired,
   };
 
   constructor (props) {
@@ -39,6 +38,8 @@ class FlowerForm extends Component {
     this.state = {
       showImageModel: false,
       selectImage: null,
+      selectedImageWidth: 0,
+      selectedImageHeight: 0,
       imageSelected: {},
       imageCrops: {},
     };
@@ -60,8 +61,27 @@ class FlowerForm extends Component {
     });
   }
 
+  _getImageDimension (imageUrl) {
+    return new Promise((resolve, reject) => {
+      const img = document.createElement('img');
+      img.onload = function () {
+        img.remove();
+        resolve({ width: this.width, height: this.height });
+      };
+      img.src = imageUrl;
+    });
+  }
+
   openImageModel (image) {
     return () => {
+      // get image dimension
+      this._getImageDimension(image.url).then(({ width, height }) =>
+        this.setState({
+          selectedImageWidth: width,
+          selectedImageHeight: height,
+        })
+      );
+
       this.setState({
         showImageModel: true,
         selectImage: image
@@ -77,6 +97,7 @@ class FlowerForm extends Component {
     const { selectImage, imageSelected, imageCrops } = this.state;
 
     this.setState({ showImageModel: false });
+
     this.props.onUpdate({
       id: selectImage.id,
       selected: (imageSelected[selectImage.id] === true),
@@ -86,8 +107,9 @@ class FlowerForm extends Component {
   }
 
   handleCropComplete (crop) {
-    const { imageCrops, selectImage } = this.state;
+    const { imageCrops, selectImage, imageSelected } = this.state;
     imageCrops[selectImage.id] = crop;
+    imageSelected[selectImage.id] = true;
     this.setState({ imageCrops });
   }
 
@@ -97,9 +119,15 @@ class FlowerForm extends Component {
       Object.assign(this.state.imageCrops[selectImage.id] || {}, { aspect: 1 }) :
       { aspect: 1 };
 
+    const imageWidth = this.state.selectedImageWidth;
+    const imageHeight = this.state.selectedImageHeight;
+    const croppedWidth = parseInt(imageWidth * (selectImageCrop.width ? selectImageCrop.width : 0) / 100, 10);
+    const croppedHeight = parseInt(imageHeight * (selectImageCrop.height ? selectImageCrop.height : 0) / 100, 10);
+
     return selectImage ? (
       <Modal
         cancelText="Cancel"
+        maskClosable={false}
         okText="Confrim"
         onCancel={this.closeImageModel.bind(this)}
         onOk={this.handleImageEdit.bind(this)}
@@ -116,6 +144,10 @@ class FlowerForm extends Component {
         >
           <b>Select this image</b>
         </Checkbox>
+        <p>
+          Click and drag to select the cropping area
+          { `${imageWidth} x ${imageHeight} (${croppedWidth} x ${croppedHeight})` }
+        </p>
         <br/>
         <ReactCrop
           crop={selectImageCrop}
@@ -128,22 +160,18 @@ class FlowerForm extends Component {
   }
 
   render () {
-    const { images, item, onSelected } = this.props;
+    const { images } = this.props;
     const { imageSelected } = this.state;
 
     return (
       <Layout className="FlowerForm">
-        <Checkbox
-          checked={item.selected}
-          className="FlowerForm-selected"
-          onChange={e => onSelected(e.target.checked)}
-        >
-          <b>Add to dataset</b>
-        </Checkbox>
         <Card className="FlowerForm-images" noHovering title="Images">
           { images.sort((a, b) => (b.id > a.id) ? 1 : -1).map((image, key) => (
             <Card.Grid className="FlowerForm-images-card" key={key} style={gridStyle}>
-              <a className="FlowerForm-images-card-link" onClick={this.openImageModel(image).bind(this)}>
+              <a
+                className="FlowerForm-images-card-link"
+                onClick={this.openImageModel(image).bind(this)}
+              >
                 {
                   <div
                     className="FlowerForm-images-card-image"
